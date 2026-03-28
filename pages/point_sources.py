@@ -4,10 +4,10 @@ import streamlit as st
 
 from data_loader import get_league_context
 from features.managers import render_point_distribution
+from features.ui import page_header
 from fpl_api import GameUpdatingError
 
-st.header("Point Sources")
-st.caption("*Breakdown of where managers' points come from by position*")
+page_header("Point Sources", eyebrow="League", subtitle="Breakdown of where managers' points come from by position")
 
 try:
     context = get_league_context()

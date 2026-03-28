@@ -43,8 +43,8 @@ def render_points_per_gameweek(context: dict, histories: dict) -> None:
 
     fig = px.line(
         df_last6, x="Gameweek", y="Points", color="Team",
-        title="Points per Gameweek (Last 6)",
-        markers=True
+        markers=True,
+        template="plotly_white",
     )
 
     # Add league average line
@@ -53,8 +53,14 @@ def render_points_per_gameweek(context: dict, histories: dict) -> None:
         y=avg_by_gw["Avg Points"],
         mode="lines",
         name="League Avg",
-        line=dict(color="black", width=3, dash="dash"),
+        line=dict(color="#37003c", width=3, dash="dash"),
     ))
 
-    fig.update_layout(height=600)
-    st.plotly_chart(fig, width="stretch")
+    fig.update_layout(
+        height=500,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        margin=dict(t=40, b=40, l=40, r=40),
+        xaxis_title="Gameweek",
+        yaxis_title="Points",
+    )
+    st.plotly_chart(fig, use_container_width=True)

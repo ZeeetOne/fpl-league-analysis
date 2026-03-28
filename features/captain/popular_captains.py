@@ -8,6 +8,8 @@ import streamlit as st
 
 import fpl_api
 
+from features.ui import metric_card
+
 
 def render_captain_picks(context: dict, histories: dict = None) -> None:
     """Display captain picks analysis.
@@ -77,21 +79,25 @@ def render_captain_picks(context: dict, histories: dict = None) -> None:
             col1, col2 = st.columns(2)
             with col1:
                 best_name = fpl_api.get_player_name(best_captain["captain_id"], bootstrap_data)
-                st.metric("Best Captain", f"{best_name} ({best_captain['points']} pts)")
+                metric_card("Best Captain", f"{best_name}", f"{best_captain['points']} pts", "positive")
             with col2:
                 worst_name = fpl_api.get_player_name(worst_captain["captain_id"], bootstrap_data)
-                st.metric("Worst Captain", f"{worst_name} ({worst_captain['points']} pts)")
-
-        st.divider()
+                metric_card("Worst Captain", f"{worst_name}", f"{worst_captain['points']} pts", "negative")
 
         fig = px.bar(
             captain_df, x="Captain", y="Picked by Managers",
-            title="Most Popular Captain Picks",
             color="Points (x2)",
-            color_continuous_scale="Greens"
+            color_continuous_scale=[[0, "#c084fc"], [0.5, "#7b2d8b"], [1, "#37003c"]],
+            template="plotly_white",
         )
-        st.plotly_chart(fig, width="stretch")
+        fig.update_layout(
+            height=420,
+            margin=dict(t=20, b=60, l=40, r=40),
+            xaxis_title="",
+            yaxis_title="Managers",
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-        st.dataframe(captain_df, width="stretch", hide_index=True)
+        st.dataframe(captain_df, use_container_width=True, hide_index=True)
     else:
         st.warning("No captain data available for selected gameweek")

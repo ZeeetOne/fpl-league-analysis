@@ -7,6 +7,8 @@ import streamlit as st
 
 import fpl_api
 
+from features.ui import section_header
+
 
 def _get_position_name(element_type: int) -> str:
     """Get position name from element type.
@@ -131,8 +133,6 @@ def render_point_distribution(context: dict) -> None:
         st.warning("No point data available for the selected managers. This could mean the gameweek hasn't started yet.")
         return
 
-    st.divider()
-
     # Display pie charts side by side
     col1, col2 = st.columns(2)
 
@@ -149,7 +149,7 @@ def render_point_distribution(context: dict) -> None:
                 values=list(position_points_1.values()),
                 hole=0.3,
                 marker=dict(
-                    colors=['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A']
+                    colors=['#37003c', '#7b2d8b', '#00ff87', '#c084fc']
                 ),
             )])
 
@@ -157,6 +157,7 @@ def render_point_distribution(context: dict) -> None:
                 height=400,
                 showlegend=True,
                 margin=dict(t=20, b=20, l=20, r=20),
+                template="plotly_white",
             )
 
             st.plotly_chart(fig1, key="pie_chart_team1")
@@ -197,7 +198,7 @@ def render_point_distribution(context: dict) -> None:
                 values=list(position_points_2.values()),
                 hole=0.3,
                 marker=dict(
-                    colors=['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A']
+                    colors=['#37003c', '#7b2d8b', '#00ff87', '#c084fc']
                 ),
             )])
 
@@ -205,6 +206,7 @@ def render_point_distribution(context: dict) -> None:
                 height=400,
                 showlegend=True,
                 margin=dict(t=20, b=20, l=20, r=20),
+                template="plotly_white",
             )
 
             st.plotly_chart(fig2, key="pie_chart_team2")
@@ -222,32 +224,29 @@ def render_point_distribution(context: dict) -> None:
             st.warning("No data available")
 
     # Comparison bar chart
-    st.divider()
-    st.subheader("Position Comparison")
+    section_header("Position Comparison", "Head-to-head breakdown by position")
 
     if position_points_1 and position_points_2:
         positions = ["Goalkeeper", "Defense", "Midfield", "Attack"]
 
         fig = go.Figure()
 
-        # Team 1 bars
         values_1 = [position_points_1.get(pos, 0) for pos in positions]
         fig.add_trace(go.Bar(
             name=team1_name,
             x=positions,
             y=values_1,
-            marker_color='#4ECDC4',
+            marker_color='#37003c',
             text=values_1,
             textposition='auto',
         ))
 
-        # Team 2 bars
         values_2 = [position_points_2.get(pos, 0) for pos in positions]
         fig.add_trace(go.Bar(
             name=team2_name,
             x=positions,
             y=values_2,
-            marker_color='#FF6B6B',
+            marker_color='#00ff87',
             text=values_2,
             textposition='auto',
         ))
@@ -258,6 +257,7 @@ def render_point_distribution(context: dict) -> None:
             yaxis_title="Total Points",
             height=400,
             showlegend=True,
+            template="plotly_white",
         )
 
-        st.plotly_chart(fig, key="bar_chart_comparison")
+        st.plotly_chart(fig, use_container_width=True, key="bar_chart_comparison")

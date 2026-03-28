@@ -8,27 +8,23 @@ from features.head_to_head import (
     render_season_trajectory,
     render_gameweek_breakdown,
 )
+from features.ui import page_header, section_header
 from fpl_api import GameUpdatingError
 
-st.header("Head-to-Head Comparison")
+page_header("Head-to-Head", eyebrow="League", subtitle="Compare any two managers across the season")
 
 try:
     context = get_league_context()
     entry_ids = context["entry_ids"]
-
     histories = load_manager_histories(entry_ids)
 
-    # Team comparison returns the selected teams for use in other sections
     team1_name, team2_name, history1, history2 = render_team_comparison(context, histories)
 
-    # Only render other sections if teams were successfully loaded
     if team1_name and team2_name and history1 and history2:
-        st.divider()
-
+        section_header("Season Trajectory", "Cumulative points over the season")
         render_season_trajectory(team1_name, team2_name, history1, history2)
 
-        st.divider()
-
+        section_header("Gameweek Breakdown", "Points scored each gameweek")
         render_gameweek_breakdown(team1_name, team2_name, history1, history2)
 
 except GameUpdatingError:

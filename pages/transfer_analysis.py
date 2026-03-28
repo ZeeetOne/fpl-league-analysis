@@ -9,9 +9,10 @@ from features.transfers import (
     render_transfers_by_manager,
     render_most_transferred_players,
 )
+from features.ui import page_header, section_header
 from fpl_api import GameUpdatingError
 
-st.header("Transfer Analysis")
+page_header("Transfer Analysis", eyebrow="League", subtitle="Transfer activity and patterns across the mini-league")
 
 try:
     context = get_league_context()
@@ -22,16 +23,13 @@ try:
 
     render_league_transfer_summary(context, histories, transfers)
 
-    st.divider()
-
+    section_header("Activity by Gameweek", "Transfer volume across the season")
     render_transfer_activity_by_gw(context, histories, transfers)
 
-    st.divider()
-
+    section_header("Transfers by Manager", "Individual manager transfer records")
     render_transfers_by_manager(context, histories, transfers)
 
-    st.divider()
-
+    section_header("Most Transferred Players", "Popular ins and outs in the league")
     render_most_transferred_players(context, transfers)
 
 except GameUpdatingError:

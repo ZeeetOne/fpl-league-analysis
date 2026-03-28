@@ -7,23 +7,20 @@ from features.league_insights import (
     render_points_per_gameweek,
     render_rank_movement,
 )
+from features.ui import page_header, section_header
 from fpl_api import GameUpdatingError
 
-st.header("League Insights")
+page_header("League Insights", eyebrow="League", subtitle="Points trends and rank movement over recent gameweeks")
 
 try:
     context = get_league_context()
     entry_ids = context["entry_ids"]
     histories = load_manager_histories(entry_ids)
 
-    st.subheader("Points per Gameweek")
-    st.caption("*Weekly performance across all managers (dashed line = league average)*")
+    section_header("Points per Gameweek", "Weekly performance (dashed line = league average)")
     render_points_per_gameweek(context, histories)
 
-    st.divider()
-
-    st.subheader("Rank Movement")
-    st.caption("*How positions have changed over recent gameweeks*")
+    section_header("Rank Movement", "How league positions have changed over recent gameweeks")
     render_rank_movement(context, histories)
 
 except GameUpdatingError:

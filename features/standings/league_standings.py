@@ -138,7 +138,35 @@ def render_standings(
     ordered_cols = [col for col in display_columns if col in df.columns]
     df = df[ordered_cols]
 
-    st.dataframe(df, width="stretch", hide_index=True)
+    # Compute max values for progress bar columns
+    max_total = max((s["total"] for s in all_standings), default=2000)
+    max_gw = max(int(max((s["event_total"] for s in all_standings), default=80) * 1.25), 80)
+
+    column_config = {
+        "Rank": st.column_config.NumberColumn("Rank", format="%d", width="small"),
+        "Change": st.column_config.TextColumn("±", width="small"),
+        "Chip": st.column_config.TextColumn("Chip", width="small"),
+        "GW Pts": st.column_config.ProgressColumn(
+            "GW Pts", min_value=0, max_value=max_gw, format="%d"
+        ),
+        "Total Pts": st.column_config.ProgressColumn(
+            "Total Pts", min_value=0, max_value=max_total, format="%d"
+        ),
+        "Capt Pts": st.column_config.ProgressColumn(
+            "Capt Pts", min_value=0, max_value=30, format="%d"
+        ),
+        "High": st.column_config.NumberColumn("High", format="%d"),
+        "Low": st.column_config.NumberColumn("Low", format="%d"),
+        "TF Season": st.column_config.NumberColumn("TF Season", format="%d"),
+        "TF GW": st.column_config.NumberColumn("TF GW", format="%d"),
+    }
+
+    st.dataframe(
+        df,
+        column_config=column_config,
+        hide_index=True,
+        use_container_width=True,
+    )
 
 
 def _get_current_gw_chip(chips: list, current_gw: int) -> str:

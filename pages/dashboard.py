@@ -4,9 +4,13 @@ import streamlit as st
 
 from data_loader import get_league_context, load_manager_histories
 from features.dashboard import render_gw_highlights, render_league_summary, render_standings, BASIC_COLUMNS
+from features.ui import page_header, section_header
 from fpl_api import GameUpdatingError
 
-st.title("FPL League Analysis")
+page_header(
+    "FPL League Analysis",
+    eyebrow="Dashboard",
+)
 
 try:
     with st.spinner("Loading FPL data..."):
@@ -15,24 +19,15 @@ try:
 
     league_info = context["league_info"]
 
-    st.subheader(f"League: {league_info.get('name', 'Unknown')}")
+    st.caption(f"League: **{league_info.get('name', 'Unknown')}**")
 
-    st.divider()
-
-    st.header("League Summary")
-    st.caption("*Overview of league status*")
+    section_header("League Summary", "Overview of league status")
     render_league_summary(context)
 
-    st.divider()
-
-    st.header("This GW Highlights")
-    st.caption("*Notable changes and standout performances*")
+    section_header("This GW Highlights", "Notable changes and standout performances")
     render_gw_highlights(context)
 
-    st.divider()
-
-    st.header("League Standings")
-    st.caption("*Current rankings and point totals*")
+    section_header("League Standings", "Current rankings and point totals")
     render_standings(context, histories=histories, columns=BASIC_COLUMNS, limit=10)
 
 except GameUpdatingError:

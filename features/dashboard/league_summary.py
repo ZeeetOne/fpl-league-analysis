@@ -2,13 +2,11 @@
 
 import streamlit as st
 
+from features.ui import metric_card
+
 
 def render_league_summary(context: dict) -> None:
-    """Display league summary metrics as cards.
-
-    Args:
-        context: League context containing standings and current gameweek.
-    """
+    """Display league summary metrics as styled cards."""
     standings = context["standings"]
     current_gw = context["current_gw"]
 
@@ -19,11 +17,18 @@ def render_league_summary(context: dict) -> None:
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric("Total Managers", total_managers)
+        metric_card("Total Managers", str(total_managers))
     with col2:
-        st.metric("Current Gameweek", f"GW {current_gw}")
+        metric_card("Current Gameweek", f"GW {current_gw}")
     with col3:
-        st.metric("League Avg Points", f"{avg_points:.0f}")
+        metric_card("League Avg Points", f"{avg_points:.0f} pts")
     with col4:
         if leader:
-            st.metric("Leader", leader["entry_name"], f"Rank 1 w/ {leader['total']} pts")
+            metric_card(
+                "League Leader",
+                leader["entry_name"],
+                f"Rank 1 · {leader['total']} pts",
+                "positive",
+            )
+        else:
+            metric_card("League Leader", "—")

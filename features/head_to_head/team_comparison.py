@@ -2,6 +2,8 @@
 
 import streamlit as st
 
+from features.ui import metric_card
+
 
 def render_team_comparison(context: dict, histories: dict) -> tuple:
     """Display team comparison with stats.
@@ -37,7 +39,6 @@ def render_team_comparison(context: dict, histories: dict) -> tuple:
         st.warning("Could not load history for one or both teams")
         return None, None, None, None
 
-    # Calculate stats
     def calc_stats(history):
         points = [gw["points"] for gw in history]
         return {
@@ -51,18 +52,31 @@ def render_team_comparison(context: dict, histories: dict) -> tuple:
     stats1 = calc_stats(history1)
     stats2 = calc_stats(history2)
 
-    # Display comparison
-    col1, col2 = st.columns(2)
+    stat_keys = list(stats1.keys())
 
-    with col1:
-        st.subheader(team1_name)
-        for key, value in stats1.items():
-            st.metric(key, value)
+    # Display as a grid: label | team1 value | team2 value
+    for key in stat_keys:
+        v1 = stats1[key]
+        v2 = stats2[key]
+        delta = v2 - v1 if isinstance(v2, (int, float)) else None
 
-    with col2:
-        st.subheader(team2_name)
-        for key, value in stats2.items():
-            delta = value - stats1[key] if isinstance(value, (int, float)) else None
-            st.metric(key, value, delta=delta if delta else None)
+        cols = st.columns([2, 1, 1])
+        cols[0].markdown(f"**{key}**")
+
+        delta_type1 = "neutral"
+        delta_type2 = "neutral"
+        if delta is not None and delta != 0:
+            if key == "Worst GW Points":
+                delta_type1 = "positive" if delta < 0 else "neutral"
+                delta_type2 = "positive" if delta > 0 else "neutral"
+            else:
+                delta_type1 = "positive" if delta < 0 else "neutral"
+                delta_type2 = "positive" if delta > 0 else "neutral"
+
+        with cols[1]:
+            metric_card(team1_name, str(v1), delta_type=delta_type1)
+        with cols[2]:
+            delta_label = f"+{delta}" if delta and delta > 0 else (f"{delta}" if delta else None)
+            metric_card(team2_name, str(v2), delta_label, delta_type=delta_type2)
 
     return team1_name, team2_name, history1, history2
