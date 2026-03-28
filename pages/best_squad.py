@@ -2,6 +2,7 @@
 
 import streamlit as st
 
+from data_loader import show_error
 from fpl_api import get_bootstrap_data, get_live_gameweek, get_current_gameweek, GameUpdatingError
 from features.best_squad import render_best_squad
 
@@ -31,4 +32,4 @@ try:
 except GameUpdatingError:
     st.warning("The FPL game is currently being updated. Please try again later.")
 except Exception as e:
-    st.error(f"Failed to load data: {e}")
+    show_error(e)

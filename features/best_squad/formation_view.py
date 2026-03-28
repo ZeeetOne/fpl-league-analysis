@@ -1,5 +1,7 @@
 """Formation view rendering for best squad."""
 
+import html as _html
+
 import streamlit as st
 
 from features.best_squad.squad_selector import merge_player_data, select_best_squad
@@ -32,22 +34,27 @@ def _render_player_card_html(player: dict) -> str:
         HTML string for the player card.
     """
     points_color = _get_points_color(player["total_points"])
-    shirt_url = f"https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_{player['team_code']}-66.png"
+    team_code = int(player["team_code"])  # enforce integer — no injection via URL
+    shirt_url = f"https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_{team_code}-66.png"
     price = player.get("price", 0)
     price_str = f"£{price:.1f}m"
+    safe_team = _html.escape(str(player["team"]))
+    safe_name = _html.escape(str(player["web_name"]))
+    safe_points = int(player["total_points"])
+    safe_team_abbr = _html.escape(str(player["team"])[:3])
 
-    html = f"""<div style='text-align: center; padding: 0.5rem; flex: 1; display: flex; flex-direction: column; align-items: center;'>
+    card_html = f"""<div style='text-align: center; padding: 0.5rem; flex: 1; display: flex; flex-direction: column; align-items: center;'>
         <div style='background-color: rgba(0, 0, 0, 0.7); color: white; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.5rem;'>{price_str}</div>
         <div style='position: relative; display: inline-block;'>
-            <img src="{shirt_url}" alt="{player['team']}" style='width: 80px; height: 80px; display: block;' onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-            <div style='display: none; width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; line-height: 80px; color: white; font-weight: bold; font-size: 1.5rem;'>{player['team'][:3]}</div>
+            <img src="{shirt_url}" alt="{safe_team}" style='width: 80px; height: 80px; display: block;' onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+            <div style='display: none; width: 80px; height: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; line-height: 80px; color: white; font-weight: bold; font-size: 1.5rem;'>{safe_team_abbr}</div>
         </div>
-        <div style='background-color: {points_color}; color: #37003c; font-weight: bold; font-size: 0.9rem; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3);'>{player['total_points']}</div>
-        <div style='font-size: 0.85rem; font-weight: 600; color: white; background-color: #37003c; padding: 0.25rem 0.5rem; border-radius: 2px; margin-top: 0.5rem;'>{player['web_name']}</div>
-        <div style='font-size: 0.75rem; font-weight: 500; color: #37003c; background-color: white; padding: 0.15rem 0.4rem; border-radius: 2px; margin-top: 0.3rem;'>{player['team']}</div>
+        <div style='background-color: {points_color}; color: #37003c; font-weight: bold; font-size: 0.9rem; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.3);'>{safe_points}</div>
+        <div style='font-size: 0.85rem; font-weight: 600; color: white; background-color: #37003c; padding: 0.25rem 0.5rem; border-radius: 2px; margin-top: 0.5rem;'>{safe_name}</div>
+        <div style='font-size: 0.75rem; font-weight: 500; color: #37003c; background-color: white; padding: 0.15rem 0.4rem; border-radius: 2px; margin-top: 0.3rem;'>{safe_team}</div>
     </div>"""
 
-    return html
+    return card_html
 
 
 def _render_forwards_row_html(forwards: list) -> str:

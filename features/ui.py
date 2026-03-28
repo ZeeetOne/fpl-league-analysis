@@ -1,5 +1,7 @@
 """Shared UI components and styling for FPL League Analysis."""
 
+import html as _html
+
 import streamlit as st
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
@@ -219,6 +221,9 @@ def inject_css() -> None:
 
 # ── Components ────────────────────────────────────────────────────────────────
 
+_VALID_DELTA_TYPES = {"positive", "negative", "neutral"}
+
+
 def metric_card(
     label: str,
     value: str,
@@ -226,14 +231,18 @@ def metric_card(
     delta_type: str = "neutral",
 ) -> None:
     """Render a styled FPL metric card inside the current column."""
+    safe_label = _html.escape(str(label))
+    safe_value = _html.escape(str(value))
+    safe_delta_type = delta_type if delta_type in _VALID_DELTA_TYPES else "neutral"
     delta_html = (
-        f'<div class="card-delta {delta_type}">{delta}</div>' if delta else ""
+        f'<div class="card-delta {safe_delta_type}">{_html.escape(str(delta))}</div>'
+        if delta else ""
     )
     st.markdown(
         f"""
         <div class="fpl-card">
-            <div class="card-label">{label}</div>
-            <div class="card-value">{value}</div>
+            <div class="card-label">{safe_label}</div>
+            <div class="card-value">{safe_value}</div>
             {delta_html}
         </div>
         """,

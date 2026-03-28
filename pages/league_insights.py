@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from data_loader import get_league_context, load_manager_histories
+from data_loader import get_league_context, load_manager_histories, show_error
 from features.league_insights import (
     render_points_per_gameweek,
     render_rank_movement,
@@ -26,4 +26,4 @@ try:
 except GameUpdatingError:
     st.warning("The FPL game is currently being updated. Please try again later.")
 except Exception as e:
-    st.error(f"Failed to load data: {e}")
+    show_error(e)

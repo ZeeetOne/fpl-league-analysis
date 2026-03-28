@@ -7,6 +7,7 @@ from data_loader import (
     load_manager_histories,
     load_manager_picks,
     load_manager_transfers,
+    show_error,
 )
 from features.standings import render_standings
 from features.ui import page_header
@@ -28,4 +29,4 @@ try:
 except GameUpdatingError:
     st.warning("The FPL game is currently being updated. Please try again later.")
 except Exception as e:
-    st.error(f"Failed to load data: {e}")
+    show_error(e)

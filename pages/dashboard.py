@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from data_loader import get_league_context, load_manager_histories
+from data_loader import get_league_context, load_manager_histories, show_error
 from features.dashboard import render_gw_highlights, render_league_summary, render_standings, BASIC_COLUMNS
 from features.ui import page_header, section_header
 from fpl_api import GameUpdatingError
@@ -33,4 +33,4 @@ try:
 except GameUpdatingError:
     st.warning("The FPL game is currently being updated. This usually happens before matches begin. Please try again later.")
 except Exception as e:
-    st.error(f"Failed to load data: {e}")
+    show_error(e)

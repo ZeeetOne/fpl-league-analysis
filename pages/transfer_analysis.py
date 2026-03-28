@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from data_loader import get_league_context, load_manager_histories, load_manager_transfers
+from data_loader import get_league_context, load_manager_histories, load_manager_transfers, show_error
 from features.transfers import (
     render_league_transfer_summary,
     render_transfer_activity_by_gw,
@@ -35,4 +35,4 @@ try:
 except GameUpdatingError:
     st.warning("The FPL game is currently being updated. Please try again later.")
 except Exception as e:
-    st.error(f"Failed to load data: {e}")
+    show_error(e)

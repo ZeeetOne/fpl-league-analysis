@@ -61,6 +61,16 @@ def load_manager_picks(entry_ids: tuple, gameweek: int):
     return picks
 
 
+def show_error(e: Exception) -> None:
+    """Display a sanitized error message without exposing internal details."""
+    import streamlit as _st
+    from fpl_api import GameUpdatingError
+    if isinstance(e, GameUpdatingError):
+        _st.warning("The FPL game is currently being updated. Please try again later.")
+    else:
+        _st.error("Failed to load data. Please check the league ID and try again.")
+
+
 def get_rank_change_indicator(current: int, previous: int) -> str:
     """Return arrow indicator for rank change."""
     if previous == 0:

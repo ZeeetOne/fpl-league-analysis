@@ -39,40 +39,32 @@ def get_bootstrap_data() -> dict:
     return response.json()
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=300, max_entries=1000)
 def get_manager_entry(entry_id: int) -> dict:
     """Fetch manager's entry info (includes free transfers)."""
     url = f"{BASE_URL}/entry/{entry_id}/"
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    return _make_request(url).json()
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=300, max_entries=1000)
 def get_manager_history(entry_id: int) -> dict:
     """Fetch manager's gameweek history."""
     url = f"{BASE_URL}/entry/{entry_id}/history/"
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    return _make_request(url).json()
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=300, max_entries=1000)
 def get_manager_transfers(entry_id: int) -> list:
     """Fetch manager's transfer history."""
     url = f"{BASE_URL}/entry/{entry_id}/transfers/"
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    return _make_request(url).json()
 
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=300, max_entries=2000)
 def get_manager_picks(entry_id: int, gameweek: int) -> dict:
     """Fetch manager's picks for a specific gameweek."""
     url = f"{BASE_URL}/entry/{entry_id}/event/{gameweek}/picks/"
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    return _make_request(url).json()
 
 
 def get_current_gameweek(bootstrap_data: dict) -> int:
@@ -101,6 +93,4 @@ def get_player_name(player_id: int, bootstrap_data: dict) -> str:
 def get_live_gameweek(gameweek: int) -> dict:
     """Fetch live data for a specific gameweek (player performance)."""
     url = f"{BASE_URL}/event/{gameweek}/live/"
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()
-    return response.json()
+    return _make_request(url).json()

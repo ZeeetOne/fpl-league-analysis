@@ -35,8 +35,10 @@ with st.sidebar:
             parsed_id = int(league_input)
         except (ValueError, TypeError):
             parsed_id = None
-        if parsed_id and parsed_id != st.session_state.league_id:
+        if parsed_id and 1 <= parsed_id <= 99_999_999:
             st.session_state.league_id = parsed_id
+        elif parsed_id is not None:
+            st.error("Please enter a valid league ID (1 – 99,999,999).")
 
     st.divider()
 
