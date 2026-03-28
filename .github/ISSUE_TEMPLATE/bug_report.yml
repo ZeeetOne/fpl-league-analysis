@@ -1,0 +1,48 @@
+name: Bug Report
+description: Something is broken or displaying incorrectly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a bug!
+
+  - type: input
+    id: page
+    attributes:
+      label: Which page is affected?
+      placeholder: e.g. Transfer Analysis, Head-to-Head
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug clearly. Include any error messages shown.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Enter league ID ...
+        2. Go to page ...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: input
+    id: league_id
+    attributes:
+      label: League ID (optional)
+      description: Only include if relevant and you're comfortable sharing
+      placeholder: e.g. 320644

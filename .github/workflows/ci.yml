@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-check:
+    name: Python Syntax Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check syntax — all project files
+        run: |
+          echo "Checking syntax..."
+          find . -name "*.py" \
+            -not -path "./.git/*" \
+            -not -path "./venv/*" \
+            -not -path "./.venv/*" \
+            | xargs python -m py_compile
+          echo "All files OK"
+
+      - name: Verify imports resolve
+        run: |
+          python -c "
+          from config import DEFAULT_LEAGUE_ID, APP_TITLE, APP_ICON
+          from features.ui import inject_css, metric_card, section_header, page_header
+          from features.global_stats import render_season_stats, render_player_rankings, render_global_transfers, render_global_ownership
+          import data_loader
+          import fpl_api
+          print('All imports resolved')
+          "
