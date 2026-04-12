@@ -5,5 +5,6 @@ APP_TITLE = "FPL League Analysis"
 APP_ICON = "⚽"
 
 # Formspree endpoint for feedback form (https://formspree.io)
-# Replace with your Formspree form URL, e.g. "https://formspree.io/f/xYourFormID"
-FORMSPREE_ENDPOINT = "https://formspree.io/f/mbdpngnd"
+# Set via Streamlit secrets: add FORMSPREE_ENDPOINT to .streamlit/secrets.toml (local)
+# or the Streamlit Cloud secrets manager (deployed).
+FORMSPREE_ENDPOINT: str = ""
