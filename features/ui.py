@@ -214,9 +214,20 @@ html, body, [class*="css"] {
 """
 
 
+_PWA_META = """
+<link rel="manifest" href="/app/static/manifest.json">
+<meta name="theme-color" content="#37003c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FPL Analysis">
+<link rel="apple-touch-icon" href="/app/static/apple-touch-icon.png">
+"""
+
+
 def inject_css() -> None:
-    """Inject global FPL styles. Call once in app.py before pg.run()."""
+    """Inject global FPL styles and PWA meta tags. Call once in app.py."""
     st.markdown(f"<style>{_CSS}</style>", unsafe_allow_html=True)
+    st.markdown(_PWA_META, unsafe_allow_html=True)
 
 
 # ── Components ────────────────────────────────────────────────────────────────

@@ -69,6 +69,9 @@ global_transfers_page = st.Page("pages/global_transfers.py", title="Global Trans
 global_ownership_page = st.Page("pages/global_ownership.py", title="Global Ownership", icon=":material/public:")
 best_squad_page = st.Page("pages/best_squad.py", title="Best Squad", icon=":material/trophy:")
 
+# Define pages — Help
+feedback_page = st.Page("pages/feedback.py", title="Feedback", icon=":material/rate_review:")
+
 # Group pages with st.navigation
 pg = st.navigation({
     "": [dashboard],
@@ -88,6 +91,7 @@ pg = st.navigation({
         global_ownership_page,
         best_squad_page,
     ],
+    "Help": [feedback_page],
 })
 
 pg.run()
