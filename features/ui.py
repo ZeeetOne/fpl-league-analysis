@@ -215,24 +215,12 @@ html, body, [class*="css"] {
 
 
 _PWA_META = """
-<script>
-(function() {
-  var head = document.head;
-  function addTag(tag, attrs) {
-    var el = document.createElement(tag);
-    Object.keys(attrs).forEach(function(k) { el.setAttribute(k, attrs[k]); });
-    head.appendChild(el);
-  }
-  var existing = head.querySelector('link[rel="manifest"]');
-  if (existing) existing.parentNode.removeChild(existing);
-  addTag('link', {rel: 'manifest', href: '/app/static/manifest.json'});
-  addTag('meta', {name: 'theme-color', content: '#37003c'});
-  addTag('meta', {name: 'apple-mobile-web-app-capable', content: 'yes'});
-  addTag('meta', {name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent'});
-  addTag('meta', {name: 'apple-mobile-web-app-title', content: 'FPL Analysis'});
-  addTag('link', {rel: 'apple-touch-icon', href: '/app/static/apple-touch-icon.png'});
-})();
-</script>
+<link rel="manifest" href="/app/static/manifest.json">
+<meta name="theme-color" content="#37003c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FPL Analysis">
+<link rel="apple-touch-icon" href="/app/static/apple-touch-icon.png">
 """
 
 
